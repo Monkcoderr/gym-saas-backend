@@ -18,7 +18,7 @@
 //  mongoose.connect(process.env.MONGO_URI).then(()=>{
 //     console.log("Success")
 //     app.listen(port,()=>{
-//         console.log("chut mari ke")
+//         console.log("fgdfgf")
 //     })}
 // ).catch((error)=>{console.error('MongoDB connection error:', error.message)
 //     process.exit(1);})
