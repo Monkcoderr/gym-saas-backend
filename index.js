@@ -79,7 +79,32 @@ app.post('/api/members' , expressAsyncHandler(async(req, res)=>{
     throw new Error('Invalid member data')
    }
 
+}))  
+
+
+
+app.put('/api/member/:id', expressAsyncHandler(async(req, res)=>{
+  const member = await Member.findById(req.params.id);
+ 
+  if (!member){
+    res.status(404);
+    throw new Error('member not found')
+  }
+  
+  const updateMember = await Member.findByIdAndUpdate(req.params.id,
+    req.body,
+    {
+      new : true ,
+      runValidators : true
+    }
+  );
+  res.status(200).json(updatedMember);
 }))
+
+
+
+
+
 
 
 // --- 3. NEW DATABASE CONNECTION & SERVER START ---
