@@ -48,6 +48,14 @@ app.get('/', (req, res) => {
   });
 });
 
+app.get('/api/members' , expressAsyncHandler(async(res,req)=>{
+const members = await Member.find({})
+res.status(200).json(members)
+
+}));
+
+
+
 app.post('/api/members' , expressAsyncHandler(async(req, res)=>{
    const {name , email , phone , membershipPlan } = req.body;
    
