@@ -99,9 +99,22 @@ app.put('/api/member/:id', expressAsyncHandler(async(req, res)=>{
     }
   );
   res.status(200).json(updatedMember);
-}))
+}));
 
 
+
+app.delete('/api/members/:id', expressAsyncHandler(async (req, res) => {
+  const member = await Member.findById(req.params.id);
+
+  if (!member) {
+    res.status(404);
+    throw new Error('Member not found');
+  }
+
+  await Member.findByIdAndDelete(req.params.id);
+
+  res.status(200).json({ message: 'Member removed', id: req.params.id });
+}));
 
 
 
