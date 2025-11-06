@@ -30,6 +30,7 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose'; // <-- 1. Import mongoose
 import Member from './models/member.model.js';
 import expressAsyncHandler from 'express-async-handler';
+import User from './models/user.model.js';
 
 dotenv.config();
 
