@@ -48,9 +48,9 @@ app.get('/', (req, res) => {
   });
 });
 
-app.get('/api/members' , expressAsyncHandler(async(res,req)=>{
+app.get('/api/members' , expressAsyncHandler(async(req , res)=>{
 const members = await Member.find({})
-res.status(200).json(members)
+res.status(200).json(members);
 
 }));
 
