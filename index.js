@@ -28,11 +28,17 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose'; // <-- 1. Import mongoose
+import Member from './models/member.model';
+import expressAsyncHandler from 'express-async-handler';
 
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+
+
+app.use(express.json)
 
 // --- 2. DEFINE YOUR ROUTES FIRST ---
 // (We can add them back here)
@@ -41,6 +47,32 @@ app.get('/', (req, res) => {
     message: "Database is connected!" 
   });
 });
+
+app.post('/api/members' , expressAsyncHandler(async(req, res)=>{
+   const {name , email , phone , memebershipPlan } = req.body;
+   
+   const memberExist = await Member.findOne({email});
+
+   if(memberExist) {
+    res.status(400);
+    throw new Error('A member with this email already exists.');
+   }
+
+   const newMember = await Member.create({
+    name,
+    email,
+    phone,
+    membershipPlan,
+   });
+
+   if (newMember){
+    res.status(201).json(newMember)
+   } else{res.status(400);
+    throw new Error('Invalid member data')
+   }
+
+}))
+
 
 // --- 3. NEW DATABASE CONNECTION & SERVER START ---
 // Try to connect to the database...
