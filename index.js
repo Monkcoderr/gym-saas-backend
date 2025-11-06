@@ -83,7 +83,7 @@ app.post('/api/members' , expressAsyncHandler(async(req, res)=>{
 
 
 
-app.put('/api/member/:id', expressAsyncHandler(async(req, res)=>{
+app.put('/api/members/:id', expressAsyncHandler(async(req, res)=>{
   const member = await Member.findById(req.params.id);
  
   if (!member){
@@ -91,7 +91,7 @@ app.put('/api/member/:id', expressAsyncHandler(async(req, res)=>{
     throw new Error('member not found')
   }
   
-  const updateMember = await Member.findByIdAndUpdate(req.params.id,
+  const updatedMember = await Member.findByIdAndUpdate(req.params.id,
     req.body,
     {
       new : true ,
