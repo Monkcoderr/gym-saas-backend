@@ -38,7 +38,7 @@ const port = process.env.PORT || 3000;
 
 
 
-app.use(express.json)
+app.use(express.json())
 
 // --- 2. DEFINE YOUR ROUTES FIRST ---
 // (We can add them back here)
@@ -49,7 +49,7 @@ app.get('/', (req, res) => {
 });
 
 app.post('/api/members' , expressAsyncHandler(async(req, res)=>{
-   const {name , email , phone , memebershipPlan } = req.body;
+   const {name , email , phone , membershipPlan } = req.body;
    
    const memberExist = await Member.findOne({email});
 
