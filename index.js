@@ -31,6 +31,10 @@ import mongoose from 'mongoose'; // <-- 1. Import mongoose
 import Member from './models/member.model.js';
 import expressAsyncHandler from 'express-async-handler';
 import User from './models/user.model.js';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import { protect } from './middleware/auth.middleware.js';
+
 
 dotenv.config();
 
@@ -49,7 +53,7 @@ app.get('/', (req, res) => {
   });
 });
 
-app.get('/api/members' , expressAsyncHandler(async(req , res)=>{
+app.get('/api/members' , protect ,expressAsyncHandler(async(req , res)=>{
 const members = await Member.find({})
 res.status(200).json(members);
 
@@ -57,7 +61,7 @@ res.status(200).json(members);
 
 
 
-app.post('/api/members' , expressAsyncHandler(async(req, res)=>{
+app.post('/api/members' , protect, expressAsyncHandler(async(req, res)=>{
    const {name , email , phone , membershipPlan } = req.body;
    
    const memberExist = await Member.findOne({email});
@@ -84,7 +88,7 @@ app.post('/api/members' , expressAsyncHandler(async(req, res)=>{
 
 
 
-app.put('/api/members/:id', expressAsyncHandler(async(req, res)=>{
+app.put('/api/members/:id', protect, expressAsyncHandler(async(req, res)=>{
   const member = await Member.findById(req.params.id);
  
   if (!member){
@@ -104,7 +108,7 @@ app.put('/api/members/:id', expressAsyncHandler(async(req, res)=>{
 
 
 
-app.delete('/api/members/:id', expressAsyncHandler(async (req, res) => {
+app.delete('/api/members/:id', protect, expressAsyncHandler(async (req, res) => {
   const member = await Member.findById(req.params.id);
 
   if (!member) {
@@ -146,6 +150,34 @@ app.post('/api/users/register',expressAsyncHandler(async(req,res)=>{
 
 }))
 
+app.post('/api/users/login', expressAsyncHandler(async(req, res)=>{
+  const {email, password} = req.body;
+  const user = await User.findOne({email})
+   
+  if (user && (await user.matchPassword(password))) {
+
+    const token = jwt.sign(
+      {id : user._id},
+      process.env.JWT_SECRET,
+      {expiresIn:'30d'}
+    )
+    res.status(200).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      token: token,
+    });
+  }else {
+    // 4b. If user or password is bad, send '401 Unauthorized'
+    res.status(401); // 401 means "Unauthorized"
+    throw new Error('Invalid email or password');
+  }
+
+  
+
+
+
+}))
 
 
 
